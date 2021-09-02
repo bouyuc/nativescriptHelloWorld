@@ -11,14 +11,10 @@ jobs:
       - run: mkdir ~/npm_prefix/
       - run: echo 'export PATH=~/npm_prefix/node_modules/.bin:$PATH' >> $BASH_ENV
       - run: node -v && npm -v
-      - restore_cache:
-          keys:
-            - node-modules-linux-{{CLI_VERSION}}
       - run: ns --version || (pushd ~/npm_prefix && npm i nativescript@{{CLI_VERSION}} && popd)
       - save_cache:
           paths:
             - ~/npm_prefix/node_modules/
-          key: node-modules-linux-{{CLI_VERSION}}
       
       # Disable usage & error reporting
       - run: ns usage-reporting disable
