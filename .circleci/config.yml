@@ -1,45 +1,28 @@
 # For a detailed guide to building and testing on iOS, read the docs:
 # https://circleci.com/docs/2.0/testing-ios/
 
-version: 2.1
+version: 2
 
 jobs:
-#   build:
+  build:
+    working_directory: /tmp
+    steps:
+      - run:
+          name: Creating Dummy Artifacts
+          command: |
+            echo "my artifact file" > /tmp/art-1;
+            mkdir /tmp/artifacts;
+            echo "my artifact files in a dir" > /tmp/artifacts/art-2;
 
-#     macos:
-#       xcode: 11.0.0 # Specify the Xcode version to use
+      - store_artifacts:
+          path: /tmp/art-1
+          destination: artifact-file
 
-#     steps:
-#       - checkout
-#       - run: pod install # Install CocoaPods dependencies
-#       - run: fastlane scan # Run tests using Fastlane
-
-#       # Collect XML test results data to show in the UI, and save the same XML
-#       # files under test-results folder in the Artifacts tab
-#       - store_test_results:
-#           path: test_output
-#       - store_artifacts:
-#           path: test_output
-#           destination: scan-output
-build:
-  working_directory: /tmp
-  steps:
-    - run:
-        name: Creating Dummy Artifacts
-        command: |
-          echo "my artifact file" > /tmp/art-1;
-          mkdir /tmp/artifacts;
-          echo "my artifact files in a dir" > /tmp/artifacts/art-2;
-
-    - store_artifacts:
-        path: /tmp/art-1
-        destination: artifact-file
-
-    - store_artifacts:
-        path: /tmp/artifacts
-orbs:
-  android: circleci/android@1.0.3
-workflows:
-    example-workflow:
-      jobs:
-        - android/build
+      - store_artifacts:
+          path: /tmp/artifacts
+# orbs:
+#   android: circleci/android@1.0.3
+# workflows:
+#     example-workflow:
+#       jobs:
+#         - android/build
