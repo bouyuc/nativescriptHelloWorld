@@ -1,52 +1,18 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/android:api-30-node
-
-    working_directory: "~/{{PROJECT_NAME}}"
-
+    working_directory: /tmp
     steps:
-      # setup NPM & ns cli
-      - run: mkdir ~/npm_prefix/
-      - run: echo 'export PATH=~/npm_prefix/node_modules/.bin:$PATH' >> $BASH_ENV
-      - run: node -v && npm -v
-      - run: ns --version || (pushd ~/npm_prefix && npm i nativescript@{{CLI_VERSION}} && popd)
-      - save_cache:
-          paths:
-            - ~/npm_prefix/node_modules/
-      
-      # Disable usage & error reporting
-      - run: ns usage-reporting disable
-      - run: ns error-reporting disable
-
-      - checkout
-
-      # NODE PACKAGES
-      - run: npm install
-
-      # INSTALL GEMS
-      - restore_cache:
-          key: gems-linux-{{ checksum "Gemfile" }}
-      - run: bundle config set path 'vendor/bundle'
-      - run: bundle install
-      - save_cache:
-          key: gems-linux-{{ checksum "Gemfile" }}
-          paths:
-            - vendor/bundle
-
-      # build and publish if needed
-      - restore_cache:
-          key: gradle-{{ checksum "package.json" }}
       - run:
-          name: Fastlane
-          command: bundle exec fastlane android build
-      - save_cache:
-          key: gradle-{{ checksum "package.json" }}
-          paths:
-            - ~/.gradle
+          name: Creating Dummy Artifacts
+          command: |
+            echo "my artifact file" > /tmp/art-1;
+            mkdir /tmp/artifacts;
+            echo "my artifact files in a dir" > /tmp/artifacts/art-2;
 
-      # Expose artifacts
       - store_artifacts:
-          path: ~/fl_output
-          destination: ~/output
+          path: /tmp/art-1
+          destination: artifact-file
+
+      - store_artifacts:
+          path: /tmp/artifacts
